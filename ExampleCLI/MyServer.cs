@@ -1,5 +1,5 @@
-﻿using System;
-using NamedPipeWrapper;
+﻿using NamedPipeWrapper;
+using System;
 
 namespace ExampleCLI
 {
@@ -35,10 +35,10 @@ namespace ExampleCLI
         {
             Console.WriteLine("Client {0} is now connected!", connection.Id);
             connection.PushMessage(new MyMessage
-                {
-                    Id = new Random().Next(),
-                    Text = "Welcome!"
-                });
+            {
+                Id = new Random().Next(),
+                Text = "Welcome!"
+            });
         }
 
         private void OnClientDisconnected(NamedPipeConnection<MyMessage, MyMessage> connection)
