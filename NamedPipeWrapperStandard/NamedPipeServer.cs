@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NamedPipeWrapperStandard.IO;
+using NamedPipeWrapperStandard.Threading;
+using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
-using NamedPipeWrapperStandard.IO;
-using NamedPipeWrapperStandard.Threading;
 
 namespace NamedPipeWrapperStandard
 {

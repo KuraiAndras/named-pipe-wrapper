@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NamedPipeWrapperStandard.IO;
+using NamedPipeWrapperStandard.Threading;
+using System;
 using System.IO.Pipes;
 using System.Threading;
-using NamedPipeWrapperStandard.IO;
-using NamedPipeWrapperStandard.Threading;
 
 namespace NamedPipeWrapperStandard
 {
@@ -13,11 +13,11 @@ namespace NamedPipeWrapperStandard
     public class NamedPipeClient<TReadWrite> : NamedPipeClient<TReadWrite, TReadWrite> where TReadWrite : class
     {
         /// <summary>
-        /// Constructs a new <c>NamedPipeClient</c> to connect to the <see cref="NamedPipeNamedPipeServer{TReadWrite}"/> specified by <paramref name="pipeName"/>.
+        /// Constructs a new <c>NamedPipeClient</c> to connect to the <see cref="NamedPipeServer{TReadWrite}"/> specified by <paramref name="pipeName"/>.
         /// </summary>
         /// <param name="pipeName">Name of the server's pipe</param>
         /// <param name="serverName">server name default is local.</param>
-        public NamedPipeClient(string pipeName,string serverName=".") : base(pipeName, serverName)
+        public NamedPipeClient(string pipeName, string serverName = ".") : base(pipeName, serverName)
         {
         }
     }
@@ -66,11 +66,11 @@ namespace NamedPipeWrapperStandard
         private string _serverName { get; set; }
 
         /// <summary>
-        /// Constructs a new <c>NamedPipeClient</c> to connect to the <see cref="NamedPipeServer{TRead, TWrite}"/> specified by <paramref name="pipeName"/>.
+        /// Constructs a new <c>NamedPipeClient</c> to connect to the <see cref="NamedPipeServer{TReadWrite}"/> specified by <paramref name="pipeName"/>.
         /// </summary>
         /// <param name="pipeName">Name of the server's pipe</param>
         /// <param name="serverName">the Name of the server, default is  local machine</param>
-        public NamedPipeClient(string pipeName,string serverName)
+        public NamedPipeClient(string pipeName, string serverName)
         {
             _pipeName = pipeName;
             _serverName = serverName;
@@ -148,12 +148,12 @@ namespace NamedPipeWrapperStandard
         private void ListenSync()
         {
             // Get the name of the data pipe that should be used from now on by this NamedPipeClient
-            var handshake = PipeClientFactory.Connect<string, string>(_pipeName,_serverName);
+            var handshake = PipeClientFactory.Connect<string, string>(_pipeName, _serverName);
             var dataPipeName = handshake.ReadObject();
             handshake.Close();
 
             // Connect to the actual data pipe
-            var dataPipe = PipeClientFactory.CreateAndConnectPipe(dataPipeName,_serverName);
+            var dataPipe = PipeClientFactory.CreateAndConnectPipe(dataPipeName, _serverName);
 
             // Create a Connection object for the data pipe
             _connection = ConnectionFactory.CreateConnection<TRead, TWrite>(dataPipe);
@@ -206,11 +206,11 @@ namespace NamedPipeWrapperStandard
 
     static class PipeClientFactory
     {
-        public static PipeStreamWrapper<TRead, TWrite> Connect<TRead, TWrite>(string pipeName,string serverName)
+        public static PipeStreamWrapper<TRead, TWrite> Connect<TRead, TWrite>(string pipeName, string serverName)
             where TRead : class
             where TWrite : class
         {
-            return new PipeStreamWrapper<TRead, TWrite>(CreateAndConnectPipe(pipeName,serverName));
+            return new PipeStreamWrapper<TRead, TWrite>(CreateAndConnectPipe(pipeName, serverName));
         }
 
         public static NamedPipeClientStream CreateAndConnectPipe(string pipeName, string serverName)
@@ -220,7 +220,7 @@ namespace NamedPipeWrapperStandard
             return pipe;
         }
 
-        private static NamedPipeClientStream CreatePipe(string pipeName,string serverName)
+        private static NamedPipeClientStream CreatePipe(string pipeName, string serverName)
         {
             return new NamedPipeClientStream(serverName, pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
         }

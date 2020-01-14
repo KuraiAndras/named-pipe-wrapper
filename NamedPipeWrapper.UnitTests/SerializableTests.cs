@@ -16,8 +16,8 @@ namespace NamedPipeWrapper.UnitTests
     [TestFixture]
     class SerializableTests
     {
-        private static readonly log4net.ILog Logger =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Logger =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         static SerializableTests()
         {
@@ -141,7 +141,7 @@ namespace NamedPipeWrapper.UnitTests
 
             Assert.NotNull(_actualHash, string.Format("Server should have received client's {0} item message", _expectedData.Count));
             Assert.AreEqual(_expectedHash, _actualHash, string.Format("Hash codes for {0} item message should match", _expectedData.Count));
-            Assert.AreEqual(_expectedData.Count, _actualData.Count, string.Format("Collection lengths should be equal"));
+            Assert.AreEqual(_expectedData.Count, _actualData.Count, "Collection lengths should be equal");
 
             for (var i = 0; i < _actualData.Count; i++)
             {

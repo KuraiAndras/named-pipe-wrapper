@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NamedPipeWrapperStandard.IO;
+using NamedPipeWrapperStandard.Threading;
+using System;
 using System.Collections.Concurrent;
 using System.IO.Pipes;
 using System.Runtime.Serialization;
 using System.Threading;
-using NamedPipeWrapperStandard.IO;
-using NamedPipeWrapperStandard.Threading;
 
 namespace NamedPipeWrapperStandard
 {
@@ -141,7 +141,6 @@ namespace NamedPipeWrapperStandard
         /// <exception cref="SerializationException">An object in the graph of type parameter <typeparamref name="TRead"/> is not marked as serializable.</exception>
         private void ReadPipe()
         {
-
             while (IsConnected && _streamWrapper.CanRead)
             {
                 try
@@ -160,7 +159,6 @@ namespace NamedPipeWrapperStandard
                     //we must igonre exception, otherwise, the namepipe wrapper will stop work.
                 }
             }
-            
         }
 
         /// <summary>
@@ -169,25 +167,23 @@ namespace NamedPipeWrapperStandard
         /// <exception cref="SerializationException">An object in the graph of type parameter <typeparamref name="TWrite"/> is not marked as serializable.</exception>
         private void WritePipe()
         {
-            
-                while (IsConnected && _streamWrapper.CanWrite)
+            while (IsConnected && _streamWrapper.CanWrite)
+            {
+                try
                 {
-                    try
+                    //using blockcollection, we needn't use singal to wait for result.
+                    //_writeSignal.WaitOne();
+                    //while (_writeQueue.Count > 0)
                     {
-                        //using blockcollection, we needn't use singal to wait for result.
-                        //_writeSignal.WaitOne();
-                        //while (_writeQueue.Count > 0)
-                        {
-                            _streamWrapper.WriteObject(_writeQueue.Take());
-                            _streamWrapper.WaitForPipeDrain();
-                        }
+                        _streamWrapper.WriteObject(_writeQueue.Take());
+                        _streamWrapper.WaitForPipeDrain();
                     }
-                    catch
-                    {
+                }
+                catch
+                {
                     //we must igonre exception, otherwise, the namepipe wrapper will stop work.
                 }
             }
-          
         }
     }
 

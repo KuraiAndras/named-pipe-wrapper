@@ -37,7 +37,7 @@ namespace NamedPipeWrapperStandard.Threading
 
         private void DoWorkImpl(object oAction)
         {
-            var action = (Action) oAction;
+            var action = (Action)oAction;
             try
             {
                 action();

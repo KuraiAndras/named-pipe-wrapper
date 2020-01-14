@@ -14,8 +14,8 @@ namespace NamedPipeWrapper.UnitTests
     [TestFixture]
     class DataTests
     {
-        private static readonly log4net.ILog Logger =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Logger =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         static DataTests()
         {
