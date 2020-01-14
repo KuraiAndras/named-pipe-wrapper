@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
-using NamedPipeWrapper.IO;
-using NamedPipeWrapper.Threading;
 using System.Collections.Concurrent;
+using System.IO.Pipes;
+using System.Runtime.Serialization;
+using System.Threading;
+using NamedPipeWrapperStandard.IO;
+using NamedPipeWrapperStandard.Threading;
 
-namespace NamedPipeWrapper
+namespace NamedPipeWrapperStandard
 {
     /// <summary>
     /// Represents a connection between a named pipe client and server.

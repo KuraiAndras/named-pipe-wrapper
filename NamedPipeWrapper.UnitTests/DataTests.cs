@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using log4net;
-using NUnit.Framework;
-using NamedPipeWrapper;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Layout;
+using NamedPipeWrapperStandard;
+using NUnit.Framework;
 
-namespace UnitTests
+namespace NamedPipeWrapper.UnitTests
 {
     [TestFixture]
     class DataTests

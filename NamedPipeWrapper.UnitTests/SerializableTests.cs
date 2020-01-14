@@ -1,17 +1,17 @@
-﻿using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Layout;
-using NamedPipeWrapper;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using log4net;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Layout;
+using NamedPipeWrapperStandard;
+using NUnit.Framework;
 
-namespace UnitTests
+namespace NamedPipeWrapper.UnitTests
 {
     [TestFixture]
     class SerializableTests

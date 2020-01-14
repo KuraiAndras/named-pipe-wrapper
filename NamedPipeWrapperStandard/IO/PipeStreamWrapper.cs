@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
-namespace NamedPipeWrapper.IO
+namespace NamedPipeWrapperStandard.IO
 {
     /// <summary>
     /// Wraps a <see cref="PipeStream"/> object to read and write .NET CLR objects.
