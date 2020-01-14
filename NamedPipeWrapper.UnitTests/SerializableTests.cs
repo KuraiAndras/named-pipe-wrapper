@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using NUnit.Framework;
-using NamedPipeWrapper;
+﻿using log4net;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Layout;
+using NamedPipeWrapper;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
 
 namespace UnitTests
 {
@@ -23,7 +25,10 @@ namespace UnitTests
             var appender = new ConsoleAppender { Layout = layout };
             layout.ActivateOptions();
             appender.ActivateOptions();
-            BasicConfigurator.Configure(appender);
+
+            BasicConfigurator.Configure(
+                LogManager.GetRepository(Assembly.GetAssembly(typeof(SerializableTests))),
+                appender);
         }
 
         private const string PipeName = "data_test_pipe";
@@ -137,7 +142,7 @@ namespace UnitTests
             Assert.NotNull(_actualHash, string.Format("Server should have received client's {0} item message", _expectedData.Count));
             Assert.AreEqual(_expectedHash, _actualHash, string.Format("Hash codes for {0} item message should match", _expectedData.Count));
             Assert.AreEqual(_expectedData.Count, _actualData.Count, string.Format("Collection lengths should be equal"));
-            
+
             for (var i = 0; i < _actualData.Count; i++)
             {
                 var expectedItem = _expectedData[i];
@@ -218,14 +223,14 @@ namespace UnitTests
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((TestItem) obj);
+            return Equals((TestItem)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (Id*397) ^ (int) Enum;
+                return (Id * 397) ^ (int)Enum;
             }
         }
     }

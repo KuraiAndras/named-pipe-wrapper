@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+using log4net;
 using NUnit.Framework;
 using NamedPipeWrapper;
 using log4net.Appender;
@@ -23,7 +25,10 @@ namespace UnitTests
             var appender = new ConsoleAppender { Layout = layout };
             layout.ActivateOptions();
             appender.ActivateOptions();
-            BasicConfigurator.Configure(appender);
+
+            BasicConfigurator.Configure(
+                LogManager.GetRepository(Assembly.GetAssembly(typeof(DataTests))),
+                appender);
         }
 
         private const string PipeName = "data_test_pipe";
