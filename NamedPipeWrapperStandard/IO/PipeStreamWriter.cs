@@ -52,19 +52,13 @@ namespace NamedPipeWrapperStandard.IO
 
         private void WriteLength(int len)
         {
-            var lenbuf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(len));
-            BaseStream.Write(lenbuf, 0, lenbuf.Length);
+            var lenBuf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(len));
+            BaseStream.Write(lenBuf, 0, lenBuf.Length);
         }
 
-        private void WriteObject(byte[] data)
-        {
-            BaseStream.Write(data, 0, data.Length);
-        }
+        private void WriteObject(byte[] data) => BaseStream.Write(data, 0, data.Length);
 
-        private void Flush()
-        {
-            BaseStream.Flush();
-        }
+        private void Flush() => BaseStream.Flush();
 
         #endregion
 
@@ -87,9 +81,6 @@ namespace NamedPipeWrapperStandard.IO
         /// <exception cref="ObjectDisposedException">The pipe is closed.</exception>
         /// <exception cref="NotSupportedException">The pipe does not support write operations.</exception>
         /// <exception cref="IOException">The pipe is broken or another I/O error occurred.</exception>
-        public void WaitForPipeDrain()
-        {
-            BaseStream.WaitForPipeDrain();
-        }
+        public void WaitForPipeDrain() => BaseStream.WaitForPipeDrain();
     }
 }

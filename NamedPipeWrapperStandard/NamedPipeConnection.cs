@@ -30,7 +30,7 @@ namespace NamedPipeWrapperStandard
         /// <summary>
         /// Gets a value indicating whether the pipe is connected or not.
         /// </summary>
-        public bool IsConnected { get { return _streamWrapper.IsConnected; } }
+        public bool IsConnected => _streamWrapper.IsConnected;
 
         /// <summary>
         /// Invoked when the named pipe connection terminates.
@@ -96,10 +96,7 @@ namespace NamedPipeWrapperStandard
         /// <summary>
         /// Closes the named pipe connection and underlying <c>PipeStream</c>.
         /// </summary>
-        public void Close()
-        {
-            CloseImpl();
-        }
+        public void Close() => CloseImpl();
 
         /// <summary>
         ///     Invoked on the background thread.
@@ -121,19 +118,14 @@ namespace NamedPipeWrapperStandard
 
             _notifiedSucceeded = true;
 
-            if (Disconnected != null)
-                Disconnected(this);
+            Disconnected?.Invoke(this);
         }
 
         /// <summary>
         ///     Invoked on the UI thread.
         /// </summary>
         /// <param name="exception"></param>
-        private void OnError(Exception exception)
-        {
-            if (Error != null)
-                Error(this, exception);
-        }
+        private void OnError(Exception exception) => Error?.Invoke(this, exception);
 
         /// <summary>
         ///     Invoked on the background thread.
@@ -151,12 +143,12 @@ namespace NamedPipeWrapperStandard
                         CloseImpl();
                         return;
                     }
-                    if (ReceiveMessage != null)
-                        ReceiveMessage(this, obj);
+
+                    ReceiveMessage?.Invoke(this, obj);
                 }
                 catch
                 {
-                    //we must igonre exception, otherwise, the namepipe wrapper will stop work.
+                    //we must ignore exception, otherwise, the named pipe wrapper will stop work.
                 }
             }
         }
@@ -171,7 +163,7 @@ namespace NamedPipeWrapperStandard
             {
                 try
                 {
-                    //using blockcollection, we needn't use singal to wait for result.
+                    //using block collection, we needn't use signal to wait for result.
                     //_writeSignal.WaitOne();
                     //while (_writeQueue.Count > 0)
                     {
@@ -181,22 +173,19 @@ namespace NamedPipeWrapperStandard
                 }
                 catch
                 {
-                    //we must igonre exception, otherwise, the namepipe wrapper will stop work.
+                    //we must ignore exception, otherwise, the named pipe wrapper will stop work.
                 }
             }
         }
     }
 
-    static class ConnectionFactory
+    internal static class ConnectionFactory
     {
         private static int _lastId;
 
         public static NamedPipeConnection<TRead, TWrite> CreateConnection<TRead, TWrite>(PipeStream pipeStream)
             where TRead : class
-            where TWrite : class
-        {
-            return new NamedPipeConnection<TRead, TWrite>(++_lastId, "Client " + _lastId, pipeStream);
-        }
+            where TWrite : class => new NamedPipeConnection<TRead, TWrite>(++_lastId, "Client " + _lastId, pipeStream);
     }
 
     /// <summary>

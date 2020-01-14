@@ -46,17 +46,17 @@ namespace NamedPipeWrapperStandard.IO
         /// <exception cref="IOException">Any I/O error occurred.</exception>
         private int ReadLength()
         {
-            const int lensize = sizeof(int);
-            var lenbuf = new byte[lensize];
-            var bytesRead = BaseStream.Read(lenbuf, 0, lensize);
+            const int lenSize = sizeof(int);
+            var lenBuf = new byte[lenSize];
+            var bytesRead = BaseStream.Read(lenBuf, 0, lenSize);
             if (bytesRead == 0)
             {
                 IsConnected = false;
                 return 0;
             }
-            if (bytesRead != lensize)
-                throw new IOException(string.Format("Expected {0} bytes but read {1}", lensize, bytesRead));
-            return IPAddress.NetworkToHostOrder(BitConverter.ToInt32(lenbuf, 0));
+            if (bytesRead != lenSize)
+                throw new IOException($"Expected {lenSize} bytes but read {bytesRead}");
+            return IPAddress.NetworkToHostOrder(BitConverter.ToInt32(lenBuf, 0));
         }
 
         /// <exception cref="SerializationException">An object in the graph of type parameter <typeparamref name="T"/> is not marked as serializable.</exception>
@@ -81,7 +81,7 @@ namespace NamedPipeWrapperStandard.IO
         public T ReadObject()
         {
             var len = ReadLength();
-            return len == 0 ? default(T) : ReadObject(len);
+            return len == 0 ? default : ReadObject(len);
         }
     }
 }

@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace NamedPipeWrapper.UnitTests
 {
     [TestFixture]
-    class SerializableTests
+    internal class SerializableTests
     {
         private static readonly ILog Logger =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -33,12 +33,12 @@ namespace NamedPipeWrapper.UnitTests
 
         private const string PipeName = "data_test_pipe";
 
-        private NamedPipeServer<TestCollection> _server;
-        private NamedPipeClient<TestCollection> _client;
+        private NamedPipeServer<TestCollection>? _server;
+        private NamedPipeClient<TestCollection>? _client;
 
-        private TestCollection _expectedData;
+        private TestCollection? _expectedData;
         private int _expectedHash;
-        private TestCollection _actualData;
+        private TestCollection? _actualData;
         private int _actualHash;
         private bool _clientDisconnected;
 
@@ -139,16 +139,18 @@ namespace NamedPipeWrapper.UnitTests
             if (_exceptions.Any())
                 throw new AggregateException(_exceptions);
 
-            Assert.NotNull(_actualHash, string.Format("Server should have received client's {0} item message", _expectedData.Count));
-            Assert.AreEqual(_expectedHash, _actualHash, string.Format("Hash codes for {0} item message should match", _expectedData.Count));
+            Assert.NotNull(_actualHash, $"Server should have received client's {_expectedData.Count} item message");
+            Assert.AreEqual(_expectedHash, _actualHash,
+                $"Hash codes for {_expectedData.Count} item message should match");
             Assert.AreEqual(_expectedData.Count, _actualData.Count, "Collection lengths should be equal");
 
             for (var i = 0; i < _actualData.Count; i++)
             {
                 var expectedItem = _expectedData[i];
                 var actualItem = _actualData[i];
-                Assert.AreEqual(expectedItem, actualItem, string.Format("Items at index {0} should be equal", i));
-                Assert.AreEqual(actualItem.Parent, _actualData, string.Format("Item at index {0}'s Parent property should reference the item's parent collection", i));
+                Assert.AreEqual(expectedItem, actualItem, $"Items at index {i} should be equal");
+                Assert.AreEqual(actualItem.Parent, _actualData,
+                    $"Item at index {i}'s Parent property should reference the item's parent collection");
             }
         }
 
@@ -166,7 +168,7 @@ namespace NamedPipeWrapper.UnitTests
     }
 
     [Serializable]
-    class TestCollection : List<TestItem>
+    internal class TestCollection : List<TestItem>
     {
         public override int GetHashCode()
         {
@@ -200,7 +202,7 @@ namespace NamedPipeWrapper.UnitTests
     }
 
     [Serializable]
-    class TestItem
+    internal class TestItem
     {
         public readonly int Id;
         public readonly TestCollection Parent;
@@ -213,16 +215,13 @@ namespace NamedPipeWrapper.UnitTests
             Enum = @enum;
         }
 
-        protected bool Equals(TestItem other)
-        {
-            return Id == other.Id && Enum == other.Enum;
-        }
+        protected bool Equals(TestItem other) => Id == other.Id && Enum == other.Enum;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((TestItem)obj);
         }
 
@@ -235,7 +234,7 @@ namespace NamedPipeWrapper.UnitTests
         }
     }
 
-    enum TestEnum
+    internal enum TestEnum
     {
         A = 1,
         B = 2,

@@ -197,17 +197,9 @@ namespace NamedPipeWrapperStandard
             }
         }
 
-        private void ClientOnConnected(NamedPipeConnection<TRead, TWrite> connection)
-        {
-            if (ClientConnected != null)
-                ClientConnected(connection);
-        }
+        private void ClientOnConnected(NamedPipeConnection<TRead, TWrite> connection) => ClientConnected?.Invoke(connection);
 
-        private void ClientOnReceiveMessage(NamedPipeConnection<TRead, TWrite> connection, TRead message)
-        {
-            if (ClientMessage != null)
-                ClientMessage(connection, message);
-        }
+        private void ClientOnReceiveMessage(NamedPipeConnection<TRead, TWrite> connection, TRead message) => ClientMessage?.Invoke(connection, message);
 
         private void ClientOnDisconnected(NamedPipeConnection<TRead, TWrite> connection)
         {
@@ -219,32 +211,21 @@ namespace NamedPipeWrapperStandard
                 _connections.Remove(connection);
             }
 
-            if (ClientDisconnected != null)
-                ClientDisconnected(connection);
+            ClientDisconnected?.Invoke(connection);
         }
 
         /// <summary>
         ///     Invoked on the UI thread.
         /// </summary>
-        private void ConnectionOnError(NamedPipeConnection<TRead, TWrite> connection, Exception exception)
-        {
-            OnError(exception);
-        }
+        private void ConnectionOnError(NamedPipeConnection<TRead, TWrite> connection, Exception exception) => OnError(exception);
 
         /// <summary>
         ///     Invoked on the UI thread.
         /// </summary>
         /// <param name="exception"></param>
-        private void OnError(Exception exception)
-        {
-            if (Error != null)
-                Error(exception);
-        }
+        private void OnError(Exception exception) => Error?.Invoke(exception);
 
-        private string GetNextConnectionPipeName(string pipeName)
-        {
-            return string.Format("{0}_{1}", pipeName, ++_nextPipeId);
-        }
+        private string GetNextConnectionPipeName(string pipeName) => $"{pipeName}_{++_nextPipeId}";
 
         private static void Cleanup(NamedPipeServerStream pipe)
         {
@@ -258,7 +239,7 @@ namespace NamedPipeWrapperStandard
         #endregion
     }
 
-    static class PipeServerFactory
+    internal static class PipeServerFactory
     {
         public static NamedPipeServerStream CreateAndConnectPipe(string pipeName)
         {
@@ -267,9 +248,6 @@ namespace NamedPipeWrapperStandard
             return pipe;
         }
 
-        public static NamedPipeServerStream CreatePipe(string pipeName)
-        {
-            return new NamedPipeServerStream(pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.WriteThrough, 0, 0);
-        }
+        public static NamedPipeServerStream CreatePipe(string pipeName) => new NamedPipeServerStream(pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.WriteThrough, 0, 0);
     }
 }
