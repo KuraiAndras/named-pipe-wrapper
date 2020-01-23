@@ -57,16 +57,12 @@ namespace NamedPipeWrapperStandard
         private int _nextPipeId;
 
         private volatile bool _shouldKeepRunning;
-        private volatile bool _isRunning;
 
         /// <summary>
         /// Constructs a new <c>NamedPipeServer</c> object that listens for client connections on the given <paramref name="pipeName"/>.
         /// </summary>
         /// <param name="pipeName">Name of the pipe to listen on</param>
-        public Server(string pipeName)
-        {
-            _pipeName = pipeName;
-        }
+        public Server(string pipeName) => _pipeName = pipeName;
 
         /// <summary>
         /// Begins listening for client connections in a separate background thread.
@@ -142,12 +138,10 @@ namespace NamedPipeWrapperStandard
 
         private void ListenSync()
         {
-            _isRunning = true;
             while (_shouldKeepRunning)
             {
                 WaitForConnection(_pipeName);
             }
-            _isRunning = false;
         }
 
         private void WaitForConnection(string pipeName)
