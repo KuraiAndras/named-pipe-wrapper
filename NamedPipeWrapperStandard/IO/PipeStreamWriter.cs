@@ -25,10 +25,7 @@ namespace NamedPipeWrapperStandard.IO
         /// Constructs a new <c>PipeStreamWriter</c> object that writes to given <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream">Pipe to write to</param>
-        public PipeStreamWriter(PipeStream stream)
-        {
-            BaseStream = stream;
-        }
+        public PipeStreamWriter(PipeStream stream) => BaseStream = stream;
 
         #region Private stream writers
 
